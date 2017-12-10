@@ -5,7 +5,6 @@ import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_cont
 import { Link } from 'react-router-dom';
 import { defineMessages, injectIntl, FormattedMessage, FormattedNumber } from 'react-intl';
 import { me } from 'flavours/glitch/util/initial_state';
-import { removeFromListEditor, addToListEditor } from 'flavours/glitch/actions/lists';
 
 const messages = defineMessages({
   mention: { id: 'account.mention', defaultMessage: 'Mention @{name}' },
@@ -19,11 +18,11 @@ const messages = defineMessages({
   report: { id: 'account.report', defaultMessage: 'Report @{name}' },
   share: { id: 'account.share', defaultMessage: 'Share @{name}\'s profile' },
   media: { id: 'account.media', defaultMessage: 'Media' },
-  addToList: { id: 'account.list', defaultMessage: 'Add @{name} to a list' },
   blockDomain: { id: 'account.block_domain', defaultMessage: 'Hide everything from {domain}' },
   unblockDomain: { id: 'account.unblock_domain', defaultMessage: 'Unhide {domain}' },
   hideReblogs: { id: 'account.hide_reblogs', defaultMessage: 'Hide boosts from @{name}' },
   showReblogs: { id: 'account.show_reblogs', defaultMessage: 'Show boosts from @{name}' },
+  addToList: { id: 'account.add_to_list', defaultMessage: 'Add @{name} to a list' },
 });
 
 @injectIntl
@@ -40,8 +39,7 @@ export default class ActionBar extends React.PureComponent {
     onBlockDomain: PropTypes.func.isRequired,
     onUnblockDomain: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
-    onAdd: PropTypes.func.isRequired,
-    added: PropTypes.bool,
+    onListAdd: PropTypes.func.isRequired,
   };
 
   handleShare = () => {
@@ -51,7 +49,7 @@ export default class ActionBar extends React.PureComponent {
   }
 
   render () {
-    const { account, intl } = this.props;
+    const { account, intl }  = this.props;
 
     let menu = [];
     let extraInfo = '';
@@ -73,7 +71,9 @@ export default class ActionBar extends React.PureComponent {
         } else {
           menu.push({ text: intl.formatMessage(messages.showReblogs, { name: account.get('username') }), action: this.props.onReblogToggle });
         }
-        menu.push({ text: intl.formatMessage(messages.addToList, { name: account.get('username') }), action: this.props.addToListEditor });
+        menu.push(null);
+        menu.push({ text: intl.formatMessage(messages.addToList, { name: account.get('username') }), action: this.props.onListAdd });
+        menu.push(null);
       }
 
       if (account.getIn(['relationship', 'muting'])) {

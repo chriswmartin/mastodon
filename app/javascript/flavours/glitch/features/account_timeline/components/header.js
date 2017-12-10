@@ -18,6 +18,7 @@ export default class Header extends ImmutablePureComponent {
     onMute: PropTypes.func.isRequired,
     onBlockDomain: PropTypes.func.isRequired,
     onUnblockDomain: PropTypes.func.isRequired,
+    onListAdd: PropTypes.func.isRequired,
   };
 
   static contextTypes = {
@@ -64,6 +65,10 @@ export default class Header extends ImmutablePureComponent {
     this.props.onUnblockDomain(domain, this.props.account.get('id'));
   }
 
+  handleListAdd = () => {
+    this.props.onListAdd(this.props.account, this.props.account.get('id'));
+  }
+
   render () {
     const { account } = this.props;
 
@@ -87,6 +92,7 @@ export default class Header extends ImmutablePureComponent {
           onMute={this.handleMute}
           onBlockDomain={this.handleBlockDomain}
           onUnblockDomain={this.handleUnblockDomain}
+          onListAdd={this.handleListAdd}
         />
       </div>
     );

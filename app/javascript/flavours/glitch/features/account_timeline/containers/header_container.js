@@ -16,11 +16,13 @@ import { openModal } from 'flavours/glitch/actions/modal';
 import { blockDomain, unblockDomain } from 'flavours/glitch/actions/domain_blocks';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { unfollowModal } from 'flavours/glitch/util/initial_state';
+import { fetchList, deleteList } from 'flavours/glitch/actions/lists';
 
 const messages = defineMessages({
   unfollowConfirm: { id: 'confirmations.unfollow.confirm', defaultMessage: 'Unfollow' },
   blockConfirm: { id: 'confirmations.block.confirm', defaultMessage: 'Block' },
-  blockDomainConfirm: { id: 'confirmations.domain_block.confirm', defaultMessage: 'Hide entire domain' },
+  blockdomainconfirm: { id: 'confirmations.domain_block.confirm', defaultMessage: 'hide entire domain' },
+  listAddConfirm: { id: 'confirmations.list_add.confirm', defaultMessage: 'Add' },
 });
 
 const makeMapStateToProps = () => {
@@ -97,6 +99,18 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
 
   onUnblockDomain (domain, accountId) {
     dispatch(unblockDomain(domain, accountId));
+  },
+
+  // idk this should show a list of lists with "+" signs to add
+  // and "X" signs to remove
+  // ultimately it should show a "home" list
+  // that is checked by default but can be unchecked
+  onListAdd (account, accountId) {
+    dispatch(openModal('CONFIRM', {
+      message: <FormattedMessage id='confirmations.list_add.message' defaultMessage='Add {displayName} to list' values={{  displayName: <strong>{account.get('display_name')}</strong> }} />,
+      confirm: intl.formatMessage(messages.listAddConfirm),
+      //onConfirm: () => dispatch(blockDomain(domain, accountId)),
+    }));
   },
 
 });
