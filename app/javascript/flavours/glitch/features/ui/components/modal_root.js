@@ -7,6 +7,7 @@ import ActionsModal from './actions_modal';
 import MediaModal from './media_modal';
 import VideoModal from './video_modal';
 import BoostModal from './boost_modal';
+import ListModal from './list_modal';
 import DoodleModal from './doodle_modal';
 import ConfirmationModal from './confirmation_modal';
 import {
@@ -23,6 +24,7 @@ const MODAL_COMPONENTS = {
   'ONBOARDING': OnboardingModal,
   'VIDEO': () => Promise.resolve({ default: VideoModal }),
   'BOOST': () => Promise.resolve({ default: BoostModal }),
+  'LIST': () => Promise.resolve({ default: ListModal }),
   'DOODLE': () => Promise.resolve({ default: DoodleModal }),
   'CONFIRM': () => Promise.resolve({ default: ConfirmationModal }),
   'MUTE': MuteModal,

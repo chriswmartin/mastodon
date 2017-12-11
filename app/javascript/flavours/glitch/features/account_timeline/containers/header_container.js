@@ -106,11 +106,7 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
   // ultimately it should show a "home" list
   // that is checked by default but can be unchecked
   onListAdd (account, accountId) {
-    dispatch(openModal('CONFIRM', {
-      message: <FormattedMessage id='confirmations.list_add.message' defaultMessage='Add {displayName} to list' values={{  displayName: <strong>{account.get('display_name')}</strong> }} />,
-      confirm: intl.formatMessage(messages.listAddConfirm),
-      //onConfirm: () => dispatch(blockDomain(domain, accountId)),
-    }));
+    dispatch(openModal('LIST'))
   },
 
 });
