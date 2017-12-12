@@ -2,7 +2,7 @@ import { SETTING_CHANGE, SETTING_SAVE } from 'flavours/glitch/actions/settings';
 import { COLUMN_ADD, COLUMN_REMOVE, COLUMN_MOVE } from 'flavours/glitch/actions/columns';
 import { STORE_HYDRATE } from 'flavours/glitch/actions/store';
 import { EMOJI_USE } from 'flavours/glitch/actions/emojis';
-import { LIST_DELETE_SUCCESS, LIST_FETCH_FAIL } from '../actions/lists';
+import { LIST_DELETE_SUCCESS, LIST_FETCH_FAIL, LIST_PIN_ADD, LIST_PIN_REMOVE } from '../actions/lists';
 import { Map as ImmutableMap, fromJS } from 'immutable';
 import uuid from 'flavours/glitch/util/uuid';
 
@@ -121,6 +121,14 @@ export default function settings(state = initialState, action) {
     return action.error.response.status === 404 ? filterDeadListColumns(state, action.id) : state;
   case LIST_DELETE_SUCCESS:
     return filterDeadListColumns(state, action.id);
+  case LIST_PIN_ADD:
+    return state
+      .update('pinned_lists', list => list.push(fromJS({ id: action.id, uuid: uuid(), params: action.params })))
+      .set('saved', false);
+  case LIST_PIN_REMOVE:
+    return state
+      .update('pinned_lists', list => list.filterNot(item => item.get('id') === action.uuid))
+      .set('saved', false);
   default:
     return state;
   }

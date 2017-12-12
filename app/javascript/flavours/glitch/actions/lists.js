@@ -40,6 +40,9 @@ export const LIST_EDITOR_REMOVE_REQUEST = 'LIST_EDITOR_REMOVE_REQUEST';
 export const LIST_EDITOR_REMOVE_SUCCESS = 'LIST_EDITOR_REMOVE_SUCCESS';
 export const LIST_EDITOR_REMOVE_FAIL    = 'LIST_EDITOR_REMOVE_FAIL';
 
+export const LIST_PIN_ADD    = 'LIST_PIN_ADD';
+export const LIST_PIN_REMOVE    = 'LIST_PIN_REMOVE';
+
 export const fetchList = id => (dispatch, getState) => {
   if (getState().getIn(['lists', id])) {
     return;
@@ -311,3 +314,26 @@ export const removeFromListFail = (listId, accountId, error) => ({
   accountId,
   error,
 });
+
+export function addListPin(id, params) {
+  return dispatch => {
+    dispatch({
+      type: LIST_PIN_ADD,
+      id,
+      params,
+  });
+  
+  dispatch(saveSettings());
+  };
+};
+
+export function removeListPin(id) {
+  return dispatch => {
+    dispatch({
+    type: LIST_PIN_REMOVE,
+    id,
+  });
+
+  dispatch(saveSettings());
+  };
+};

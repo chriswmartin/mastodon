@@ -5,7 +5,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import LoadingIndicator from 'flavours/glitch/components/loading_indicator';
 import Column from 'flavours/glitch/features/ui/components/column';
 import ColumnBackButtonSlim from 'flavours/glitch/components/column_back_button_slim';
-import { fetchLists } from 'flavours/glitch/actions/lists';
+import { fetchLists, addListPin, removeListPin } from 'flavours/glitch/actions/lists';
 import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import ColumnLink from 'flavours/glitch/features/ui/components/column_link';
@@ -43,6 +43,16 @@ export default class Lists extends ImmutablePureComponent {
 
   componentWillMount () {
     this.props.dispatch(fetchLists());
+  }
+
+  handlePin = () => {
+    const { listId, dispatch } = this.props;
+
+    if (listId) {
+      dispatch(removeListPin(listId));
+    } else {
+      dispatch(addListPin(listId, {}));
+    }
   }
 
   render () {
