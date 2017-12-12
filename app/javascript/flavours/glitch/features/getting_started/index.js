@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { me } from 'flavours/glitch/util/initial_state';
-import { createSelector } from 'reselect'; 
+import { createSelector } from 'reselect';
 import { fetchLists } from 'flavours/glitch/actions/lists';
 
 const messages = defineMessages({
@@ -34,6 +34,7 @@ const messages = defineMessages({
   keyboard_shortcuts: { id: 'navigation_bar.keyboard_shortcuts', defaultMessage: 'Keyboard shortcuts' },
   lists: { id: 'navigation_bar.lists', defaultMessage: 'Lists' },
   lists_subheading: { id: 'column_subheading.lists', defaultMessage: 'Lists' },
+  misc: { id: 'navigation_bar.misc', defaultMessage: 'Misc' },
 });
 
 const getOrderedLists = createSelector([state => state.get('lists')], lists => {
@@ -106,19 +107,12 @@ export default class GettingStarted extends ImmutablePureComponent {
 </Column>
 
     navItems = navItems.concat([
-      <ColumnLink key='15' icon='star' text={intl.formatMessage(messages.favourites)} to='/favourites' />,
-      <ColumnLink key='16' icon='thumb-tack' text={intl.formatMessage(messages.pins)} to='/pinned' />,
+      <ColumnLink key='21' icon='ellipsis-h' text={intl.formatMessage(messages.misc)} to='/getting-started-misc' />,
     ]);
 
     if (myAccount.get('locked')) {
       navItems.push(<ColumnLink key='18' icon='users' text={intl.formatMessage(messages.follow_requests)} to='/follow_requests' />);
     }
-
-    navItems = navItems.concat([
-      <ColumnLink key='19' icon='volume-off' text={intl.formatMessage(messages.mutes)} to='/mutes' />,
-      <ColumnLink key='20' icon='ban' text={intl.formatMessage(messages.blocks)} to='/blocks' />,
-      <ColumnLink key='17' icon='bars' text={intl.formatMessage(messages.lists)} to='/lists' />,
-    ]);
 
     return (
       <Column name='getting-started' icon='asterisk' heading={intl.formatMessage(messages.heading)} hideHeadingOnMobile>
@@ -127,12 +121,11 @@ export default class GettingStarted extends ImmutablePureComponent {
             <ColumnSubheading text={intl.formatMessage(messages.navigation_subheading)} />
             {navItems}
             <ColumnSubheading text={intl.formatMessage(messages.lists_subheading)} />
+            <ColumnLink key='17' icon='bars' text={intl.formatMessage(messages.lists)} to='/lists' />
               {lists.map(list =>
                 <ColumnLink key={list.get('id')} to={`/timelines/list/${list.get('id')}`} icon='list-ul' text={list.get('title')} />
               )}
             <ColumnSubheading text={intl.formatMessage(messages.settings_subheading)} />
-            <ColumnLink icon='book' text={intl.formatMessage(messages.info)} href='/about/more' />
-            <ColumnLink icon='hand-o-right' text={intl.formatMessage(messages.show_me_around)} onClick={this.openOnboardingModal} />
             <ColumnLink icon='cog' text={intl.formatMessage(messages.preferences)} href='/settings/preferences' />
             <ColumnLink icon='cogs' text={intl.formatMessage(messages.settings)} onClick={this.openSettings} />
             <ColumnLink icon='sign-out' text={intl.formatMessage(messages.sign_out)} href='/auth/sign_out' method='delete' />
