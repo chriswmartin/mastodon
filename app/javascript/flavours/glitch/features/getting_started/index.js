@@ -9,6 +9,8 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { me } from 'flavours/glitch/util/initial_state';
+import { createSelector } from 'reselect'; 
+import { fetchLists } from 'flavours/glitch/actions/lists';
 
 const messages = defineMessages({
   heading: { id: 'getting_started.heading', defaultMessage: 'Getting started' },
@@ -29,13 +31,23 @@ const messages = defineMessages({
   info: { id: 'navigation_bar.info', defaultMessage: 'Extended information' },
   show_me_around: { id: 'getting_started.onboarding', defaultMessage: 'Show me around' },
   pins: { id: 'navigation_bar.pins', defaultMessage: 'Pinned toots' },
-  lists: { id: 'navigation_bar.lists', defaultMessage: 'Lists' },
   keyboard_shortcuts: { id: 'navigation_bar.keyboard_shortcuts', defaultMessage: 'Keyboard shortcuts' },
+  lists: { id: 'navigation_bar.lists', defaultMessage: 'Lists' },
+  lists_subheading: { id: 'column_subheading.lists', defaultMessage: 'Lists' },
+});
+
+const getOrderedLists = createSelector([state => state.get('lists')], lists => {
+  if (!lists) {
+    return lists;
+  }
+
+  return lists.toList().filter(item => !!item).sort((a, b) => a.get('title').localeCompare(b.get('title')));
 });
 
 const mapStateToProps = state => ({
   myAccount: state.getIn(['accounts', me]),
   columns: state.getIn(['settings', 'columns']),
+  lists: getOrderedLists(state),
 });
 
 @connect(mapStateToProps)
@@ -48,6 +60,7 @@ export default class GettingStarted extends ImmutablePureComponent {
     columns: ImmutablePropTypes.list,
     multiColumn: PropTypes.bool,
     dispatch: PropTypes.func.isRequired,
+    lists: ImmutablePropTypes.list,
   };
 
   openSettings = () => {
@@ -58,47 +71,53 @@ export default class GettingStarted extends ImmutablePureComponent {
     e.preventDefault();
     this.props.dispatch(openModal('ONBOARDING'));
   }
+  componentWillMount () {
+    this.props.dispatch(fetchLists());
+  }
 
   render () {
-    const { intl, myAccount, columns, multiColumn } = this.props;
+    const { intl, myAccount, columns, multiColumn, lists } = this.props;
 
     let navItems = [];
 
     if (multiColumn) {
       if (!columns.find(item => item.get('id') === 'HOME')) {
-        navItems.push(<ColumnLink key='0' icon='home' text={intl.formatMessage(messages.home_timeline)} to='/timelines/home' />);
+        navItems.push(<ColumnLink key='10' icon='home' text={intl.formatMessage(messages.home_timeline)} to='/timelines/home' />);
       }
 
       if (!columns.find(item => item.get('id') === 'NOTIFICATIONS')) {
-        navItems.push(<ColumnLink key='1' icon='bell' text={intl.formatMessage(messages.notifications)} to='/notifications' />);
+        navItems.push(<ColumnLink key='11' icon='bell' text={intl.formatMessage(messages.notifications)} to='/notifications' />);
       }
 
       if (!columns.find(item => item.get('id') === 'COMMUNITY')) {
-        navItems.push(<ColumnLink key='2' icon='users' text={intl.formatMessage(messages.community_timeline)} to='/timelines/public/local' />);
+        navItems.push(<ColumnLink key='12' icon='users' text={intl.formatMessage(messages.community_timeline)} to='/timelines/public/local' />);
       }
 
       if (!columns.find(item => item.get('id') === 'PUBLIC')) {
-        navItems.push(<ColumnLink key='3' icon='globe' text={intl.formatMessage(messages.public_timeline)} to='/timelines/public' />);
+        navItems.push(<ColumnLink key='13' icon='globe' text={intl.formatMessage(messages.public_timeline)} to='/timelines/public' />);
       }
     }
 
     if (!multiColumn || !columns.find(item => item.get('id') === 'DIRECT')) {
-      navItems.push(<ColumnLink key='4' icon='envelope' text={intl.formatMessage(messages.direct)} to='/timelines/direct' />);
+      navItems.push(<ColumnLink key='14' icon='envelope' text={intl.formatMessage(messages.direct)} to='/timelines/direct' />);
     }
+<Column>
+            <ColumnSubheading text={intl.formatMessage(messages.lists_subheading)} />
+</Column>
 
     navItems = navItems.concat([
-      <ColumnLink key='5' icon='star' text={intl.formatMessage(messages.favourites)} to='/favourites' />,
-      <ColumnLink key='6' icon='thumb-tack' text={intl.formatMessage(messages.pins)} to='/pinned' />,
-      <ColumnLink key='10' icon='bars' text={intl.formatMessage(messages.lists)} to='/lists' />,
+      <ColumnLink key='15' icon='star' text={intl.formatMessage(messages.favourites)} to='/favourites' />,
+      <ColumnLink key='16' icon='thumb-tack' text={intl.formatMessage(messages.pins)} to='/pinned' />,
     ]);
 
     if (myAccount.get('locked')) {
-      navItems.push(<ColumnLink key='7' icon='users' text={intl.formatMessage(messages.follow_requests)} to='/follow_requests' />);
+      navItems.push(<ColumnLink key='18' icon='users' text={intl.formatMessage(messages.follow_requests)} to='/follow_requests' />);
     }
 
     navItems = navItems.concat([
-      <ColumnLink key='8' icon='volume-off' text={intl.formatMessage(messages.mutes)} to='/mutes' />,
-      <ColumnLink key='9' icon='ban' text={intl.formatMessage(messages.blocks)} to='/blocks' />,
+      <ColumnLink key='19' icon='volume-off' text={intl.formatMessage(messages.mutes)} to='/mutes' />,
+      <ColumnLink key='20' icon='ban' text={intl.formatMessage(messages.blocks)} to='/blocks' />,
+      <ColumnLink key='17' icon='bars' text={intl.formatMessage(messages.lists)} to='/lists' />,
     ]);
 
     return (
@@ -107,6 +126,10 @@ export default class GettingStarted extends ImmutablePureComponent {
           <div className='getting-started__wrapper'>
             <ColumnSubheading text={intl.formatMessage(messages.navigation_subheading)} />
             {navItems}
+            <ColumnSubheading text={intl.formatMessage(messages.lists_subheading)} />
+              {lists.map(list =>
+                <ColumnLink key={list.get('id')} to={`/timelines/list/${list.get('id')}`} icon='list-ul' text={list.get('title')} />
+              )}
             <ColumnSubheading text={intl.formatMessage(messages.settings_subheading)} />
             <ColumnLink icon='book' text={intl.formatMessage(messages.info)} href='/about/more' />
             <ColumnLink icon='hand-o-right' text={intl.formatMessage(messages.show_me_around)} onClick={this.openOnboardingModal} />

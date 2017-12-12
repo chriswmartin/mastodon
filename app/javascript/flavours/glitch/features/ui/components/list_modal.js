@@ -64,9 +64,9 @@ export default class Lists extends ImmutablePureComponent {
     return (
       <div className='modal-root__modal boost-modal'>
         <div className='boost-modal__container'>
-          <div className='scrollable'>
+          <div classname='scrollable'>
             {lists.map(list =>
-              <ColumnLink key={list.get('id')} to={`/timelines/list/${list.get('id')}`} icon='bars' text={list.get('title')} />
+              <ColumnLink key={list.get('id')} to={`/timelines/list/${list.get('id')}`} icon='list-ol' text={list.get('title')} />
             )}
           </div>
         </div>
