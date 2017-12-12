@@ -6,7 +6,11 @@ import {
   LIST_UPDATE_SUCCESS,
   LIST_DELETE_SUCCESS,
 } from '../actions/lists';
-import { Map as ImmutableMap, fromJS } from 'immutable';
+
+import {
+  LIST_PIN_SUCCESS,
+  LIST_UNPIN_SUCCESS,
+} from '../actions/interactions';
 
 const initialState = ImmutableMap();
 
@@ -31,6 +35,9 @@ export default function lists(state = initialState, action) {
   case LIST_DELETE_SUCCESS:
   case LIST_FETCH_FAIL:
     return state.set(action.id, false);
+  case LIST_PIN_SUCCESS:
+  case LIST_UNPIN_SUCCESS:
+    return normalizeList(state, action.list);
   default:
     return state;
   }

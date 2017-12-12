@@ -297,6 +297,8 @@ Rails.application.routes.draw do
 
       resources :lists, only: [:index, :create, :show, :update, :destroy] do
         resource :accounts, only: [:show, :create, :destroy], controller: 'lists/accounts'
+        resource :list_pin, only: :create
+        post :list_unpin, to: 'pins#destroy'
       end
     end
 

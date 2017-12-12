@@ -6,12 +6,17 @@ import LoadingIndicator from 'flavours/glitch/components/loading_indicator';
 import Column from 'flavours/glitch/features/ui/components/column';
 import ColumnBackButtonSlim from 'flavours/glitch/components/column_back_button_slim';
 import { fetchLists } from 'flavours/glitch/actions/lists';
+import { fetchPinnedLists } from 'flavours/glitch/actions/pin_lists';
 import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import ColumnLink from 'flavours/glitch/features/ui/components/column_link';
 import ColumnSubheading from 'flavours/glitch/features/ui/components/column_subheading';
 import NewListForm from './components/new_list_form';
 import { createSelector } from 'reselect';
+import {
+  listPin,
+  listUnpin,
+} from '../../actions/interactions';
 
 const messages = defineMessages({
   heading: { id: 'column.lists', defaultMessage: 'Lists' },
@@ -41,8 +46,16 @@ export default class Lists extends ImmutablePureComponent {
     intl: PropTypes.object.isRequired,
   };
 
+handlePin = (list) => {
+  if (list.get('pinned')) {
+    this.props.dispatch(listUnpin(list));
+  } else {
+    this.props.dispatch(listPin(list));
+  }
+}
   componentWillMount () {
     this.props.dispatch(fetchLists());
+    this.props.dispatch(fetchPinnedLists());
   }
 
   render () {

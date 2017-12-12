@@ -8,12 +8,22 @@ class Api::V1::ListsController < Api::BaseController
 
   before_action :require_user!
   before_action :set_list, except: [:index, :create]
+  before_action :set_account
 
   after_action :insert_pagination_headers, only: :index
 
   def index
     @lists = List.where(account: current_account).paginate_by_max_id(limit_param(LISTS_LIMIT), params[:max_id], params[:since_id])
+    lists.merge!(pinned_scope) if params[:pinned]
     render json: @lists, each_serializer: REST::ListSerializer
+  end
+
+  def set_account
+    @account = Account.find(params[:account_id])
+  end
+
+  def pinned_scope
+    @account.pinned_lists
   end
 
   def show

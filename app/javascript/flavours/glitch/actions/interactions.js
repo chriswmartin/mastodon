@@ -32,6 +32,14 @@ export const UNPIN_REQUEST = 'UNPIN_REQUEST';
 export const UNPIN_SUCCESS = 'UNPIN_SUCCESS';
 export const UNPIN_FAIL    = 'UNPIN_FAIL';
 
+export const LIST_PIN_REQUEST = 'PIN_REQUEST';
+export const LIST_PIN_SUCCESS = 'PIN_SUCCESS';
+export const LIST_PIN_FAIL    = 'PIN_FAIL';
+
+export const LIST_UNPIN_REQUEST = 'UNPIN_REQUEST';
+export const LIST_UNPIN_SUCCESS = 'UNPIN_SUCCESS';
+export const LIST_UNPIN_FAIL    = 'UNPIN_FAIL';
+
 export function reblog(status) {
   return function (dispatch, getState) {
     dispatch(reblogRequest(status));
@@ -308,6 +316,76 @@ export function unpinFail(status, error) {
   return {
     type: UNPIN_FAIL,
     status,
+    error,
+  };
+};
+
+export function listPin(list) {
+  return (dispatch, getState) => {
+    dispatch(listpinRequest(list));
+
+    api(getState).post(`/api/v1/lists/${list.get('id')}/pin`).then(response => {
+      dispatch(listPinSuccess(list, response.data));
+    }).catch(error => {
+      dispatch(listPinFail(status, error));
+    });
+  };
+};
+
+export function listPinRequest(list) {
+  return {
+    type: LIST_PIN_REQUEST,
+    list,
+  };
+};
+
+export function listPinSuccess(list, response) {
+  return {
+    type: LIST_PIN_SUCCESS,
+    list,
+    response,
+  };
+};
+
+export function listPinFail(list, error) {
+  return {
+    type: LIST_PIN_FAIL,
+    list,
+    error,
+  };
+};
+
+export function listUnpin (list) {
+  return (dispatch, getState) => {
+    dispatch(listUnpinRequest(list));
+
+    api(getState).post(`/api/v1/lists/${list.get('id')}/unpin`).then(response => {
+      dispatch(listUnpinSuccess(list, response.data));
+    }).catch(error => {
+      dispatch(listUnpinFail(list, error));
+    });
+  };
+};
+
+export function listUnpinRequest(list) {
+  return {
+    type: LIST_UNPIN_REQUEST,
+    list,
+  };
+};
+
+export function listUnpinSuccess(list, response) {
+  return {
+    type: LIST_UNPIN_SUCCESS,
+    list,
+    response,
+  };
+};
+
+export function listUnpinFail(list, error) {
+  return {
+    type: LIST_UNPIN_FAIL,
+    list,
     error,
   };
 };

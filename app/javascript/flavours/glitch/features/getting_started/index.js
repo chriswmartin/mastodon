@@ -76,6 +76,7 @@ export default class GettingStarted extends ImmutablePureComponent {
     const { intl, myAccount, columns, multiColumn, lists } = this.props;
 
     let navItems = [];
+    let listItems = [];
 
     if (multiColumn) {
       if (!columns.find(item => item.get('id') === 'HOME')) {
@@ -93,6 +94,7 @@ export default class GettingStarted extends ImmutablePureComponent {
       if (!columns.find(item => item.get('id') === 'PUBLIC')) {
         navItems.push(<ColumnLink key='3' icon='globe' text={intl.formatMessage(messages.public_timeline)} to='/timelines/public' />);
       }
+
     }
 
     if (!multiColumn || !columns.find(item => item.get('id') === 'DIRECT')) {
@@ -107,6 +109,20 @@ export default class GettingStarted extends ImmutablePureComponent {
       <ColumnLink key='6' icon='ellipsis-h' text={intl.formatMessage(messages.misc)} to='/getting-started-misc' />,
     ]);
 
+    if (!multiColumn || !columns.find(item => item.get('id') === lists.find('title'))) {
+          {lists.map(list =>
+            listItems.push(<ColumnLink key={list.get('id')} to={`/timelines/list/${list.get('id')}`} icon='list-ul' text={list.get('title')} />)
+          )}
+      }
+
+   // listItems = listItems.concat([
+   //   <div>
+   //     {lists.map(list =>
+   //       <ColumnLink key={list.get('id')} to={`/timelines/list/${list.get('id')}`} icon='list-ul' text={list.get('title')} />
+   //     )}
+   //   </div>
+   // ]);
+
     return (
       <Column name='getting-started' icon='asterisk' heading={intl.formatMessage(messages.heading)} hideHeadingOnMobile>
         <div className='scrollable optionally-scrollable'>
@@ -115,9 +131,7 @@ export default class GettingStarted extends ImmutablePureComponent {
             {navItems}
             <ColumnSubheading text={intl.formatMessage(messages.lists_subheading)} />
             <ColumnLink key='7' icon='bars' text={intl.formatMessage(messages.lists)} to='/lists' />
-            {lists.map(list =>
-              <ColumnLink key={list.get('id')} to={`/timelines/list/${list.get('id')}`} icon='list-ul' text={list.get('title')} />
-            )}
+            {listItems}
             <ColumnSubheading text={intl.formatMessage(messages.settings_subheading)} />
             <ColumnLink icon='cog' text={intl.formatMessage(messages.preferences)} href='/settings/preferences' />
             <ColumnLink icon='cogs' text={intl.formatMessage(messages.settings)} onClick={this.openSettings} />
