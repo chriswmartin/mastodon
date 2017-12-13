@@ -160,7 +160,6 @@ ActiveRecord::Schema.define(version: 20171201000000) do
     t.datetime "updated_at", null: false
     t.bigint "account_id", null: false
     t.bigint "target_account_id", null: false
-    t.boolean "show_reblogs", default: true, null: false
     t.index ["account_id", "target_account_id"], name: "index_follow_requests_on_account_id_and_target_account_id", unique: true
   end
 
@@ -169,7 +168,6 @@ ActiveRecord::Schema.define(version: 20171201000000) do
     t.datetime "updated_at", null: false
     t.bigint "account_id", null: false
     t.bigint "target_account_id", null: false
-    t.boolean "show_reblogs", default: true, null: false
     t.index ["account_id", "target_account_id"], name: "index_follows_on_account_id_and_target_account_id", unique: true
   end
 
@@ -256,9 +254,9 @@ ActiveRecord::Schema.define(version: 20171201000000) do
   create_table "mutes", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "hide_notifications", default: true, null: false
     t.bigint "account_id", null: false
     t.bigint "target_account_id", null: false
+    t.boolean "hide_notifications", default: true, null: false
     t.index ["account_id", "target_account_id"], name: "index_mutes_on_account_id_and_target_account_id", unique: true
   end
 
@@ -536,7 +534,6 @@ ActiveRecord::Schema.define(version: 20171201000000) do
   add_foreign_key "follow_requests", "accounts", name: "fk_76d644b0e7", on_delete: :cascade
   add_foreign_key "follows", "accounts", column: "target_account_id", name: "fk_745ca29eac", on_delete: :cascade
   add_foreign_key "follows", "accounts", name: "fk_32ed1b5560", on_delete: :cascade
-  add_foreign_key "glitch_keyword_mutes", "accounts", on_delete: :cascade
   add_foreign_key "imports", "accounts", name: "fk_6db1b6e408", on_delete: :cascade
   add_foreign_key "invites", "users", on_delete: :cascade
   add_foreign_key "list_accounts", "accounts", on_delete: :cascade
