@@ -18,6 +18,7 @@ const messages = defineMessages({
   pin: { id: 'status.pin', defaultMessage: 'Pin on profile' },
   unpin: { id: 'status.unpin', defaultMessage: 'Unpin from profile' },
   embed: { id: 'status.embed', defaultMessage: 'Embed' },
+  save: { id: 'status.save', defaultMessage: 'Save' },
 });
 
 @injectIntl
@@ -37,6 +38,7 @@ export default class ActionBar extends React.PureComponent {
     onReport: PropTypes.func,
     onPin: PropTypes.func,
     onEmbed: PropTypes.func,
+    onSave: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };
 
@@ -79,6 +81,10 @@ export default class ActionBar extends React.PureComponent {
     this.props.onEmbed(this.props.status);
   }
 
+  handleSave = () => {
+    this.props.onSave(this.props.status);
+  }
+
   render () {
     const { status, intl } = this.props;
 
@@ -101,6 +107,12 @@ export default class ActionBar extends React.PureComponent {
       menu.push(null);
       menu.push({ text: intl.formatMessage(messages.report, { name: status.getIn(['account', 'username']) }), action: this.handleReport });
     }
+
+    menu.push({ text: intl.formatMessage(messages.save), action: this.handleSave });
+
+    // REMOVE
+    console.log(status.get('saved'));
+    console.log(status);
 
     const shareButton = ('share' in navigator) && status.get('visibility') === 'public' && (
       <div className='detailed-status__button'><IconButton title={intl.formatMessage(messages.share)} icon='share-alt' onClick={this.handleShare} /></div>

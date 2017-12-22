@@ -9,6 +9,10 @@ import {
   UNFAVOURITE_SUCCESS,
   PIN_SUCCESS,
   UNPIN_SUCCESS,
+  SAVE_REQUEST,
+  SAVE_SUCCESS,
+  SAVE_FAIL,
+  UNSAVE_SUCCESS,
 } from 'flavours/glitch/actions/interactions';
 import {
   STATUS_FETCH_SUCCESS,
@@ -38,6 +42,10 @@ import {
 import {
   PINNED_STATUSES_FETCH_SUCCESS,
 } from 'flavours/glitch/actions/pin_statuses';
+import {
+  SAVED_STATUSES_FETCH_SUCCESS,
+  SAVED_STATUSES_EXPAND_SUCCESS,
+} from 'flavours/glitch/actions/saves';
 import { SEARCH_FETCH_SUCCESS } from 'flavours/glitch/actions/search';
 import emojify from 'flavours/glitch/util/emoji';
 import { Map as ImmutableMap, fromJS } from 'immutable';
@@ -114,6 +122,8 @@ export default function statuses(state = initialState, action) {
   case UNFAVOURITE_SUCCESS:
   case PIN_SUCCESS:
   case UNPIN_SUCCESS:
+  case SAVE_SUCCESS:
+  case UNSAVE_SUCCESS:
     return normalizeStatus(state, action.response);
   case FAVOURITE_REQUEST:
     return state.setIn([action.status.get('id'), 'favourited'], true);
@@ -127,6 +137,10 @@ export default function statuses(state = initialState, action) {
     return state.setIn([action.id, 'muted'], true);
   case STATUS_UNMUTE_SUCCESS:
     return state.setIn([action.id, 'muted'], false);
+  case SAVE_REQUEST:
+    return state.setIn([action.status.get('id'), 'saved'], true);
+  case SAVE_FAIL:
+    return state.setIn([action.status.get('id'), 'saved'], false);
   case TIMELINE_REFRESH_SUCCESS:
   case TIMELINE_EXPAND_SUCCESS:
   case CONTEXT_FETCH_SUCCESS:
@@ -135,6 +149,8 @@ export default function statuses(state = initialState, action) {
   case FAVOURITED_STATUSES_FETCH_SUCCESS:
   case FAVOURITED_STATUSES_EXPAND_SUCCESS:
   case PINNED_STATUSES_FETCH_SUCCESS:
+  case SAVED_STATUSES_FETCH_SUCCESS:
+  case SAVED_STATUSES_EXPAND_SUCCESS:
   case SEARCH_FETCH_SUCCESS:
     return normalizeStatuses(state, action.statuses);
   case TIMELINE_DELETE:

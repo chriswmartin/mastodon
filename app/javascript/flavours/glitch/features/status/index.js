@@ -15,6 +15,8 @@ import {
   unreblog,
   pin,
   unpin,
+  save,
+  unsave,
 } from 'flavours/glitch/actions/interactions';
 import {
   replyCompose,
@@ -171,6 +173,14 @@ export default class Status extends ImmutablePureComponent {
 
   handleEmbed = (status) => {
     this.props.dispatch(openModal('EMBED', { url: status.get('url') }));
+  }
+
+  handleSave = (status) => {
+    if (status.get('saved')) {
+      this.props.dispatch(unsave(status));
+    } else {
+      this.props.dispatch(save(status));
+    }
   }
 
   handleHotkeyMoveUp = () => {
@@ -352,6 +362,7 @@ export default class Status extends ImmutablePureComponent {
                   onReport={this.handleReport}
                   onPin={this.handlePin}
                   onEmbed={this.handleEmbed}
+                  onSave={this.handleSave}
                 />
               </div>
             </HotKeys>

@@ -43,6 +43,7 @@ export default class Status extends ImmutablePureComponent {
     withDismiss: PropTypes.bool,
     onMoveUp: PropTypes.func,
     onMoveDown: PropTypes.func,
+    onSave: PropTypes.func,
   };
 
   state = {

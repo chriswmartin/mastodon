@@ -32,6 +32,18 @@ export const UNPIN_REQUEST = 'UNPIN_REQUEST';
 export const UNPIN_SUCCESS = 'UNPIN_SUCCESS';
 export const UNPIN_FAIL    = 'UNPIN_FAIL';
 
+export const SAVE_REQUEST = 'SAVE_REQUEST';
+export const SAVE_SUCCESS = 'SAVE_SUCCESS';
+export const SAVE_FAIL    = 'SAVE_FAIL';
+
+export const UNSAVE_REQUEST = 'UNSAVE_REQUEST';
+export const UNSAVE_SUCCESS = 'UNSAVE_SUCCESS';
+export const UNSAVE_FAIL    = 'UNSAVE_FAIL';
+
+export const SAVES_FETCH_REQUEST = 'SAVES_FETCH_REQUEST';
+export const SAVES_FETCH_SUCCESS = 'SAVES_FETCH_SUCCESS';
+export const SAVES_FETCH_FAIL    = 'SAVES_FETCH_FAIL';
+
 export function reblog(status) {
   return function (dispatch, getState) {
     dispatch(reblogRequest(status));
@@ -311,3 +323,108 @@ export function unpinFail(status, error) {
     error,
   };
 };
+
+export function save(status) {
+  return function (dispatch, getState) {
+    dispatch(saveRequest(status));
+
+    api(getState).post(`/api/v1/statuses/${status.get('id')}/save`).then(function (response) {
+      dispatch(saveSuccess(status, response.data));
+    }).catch(function (error) {
+      dispatch(saveFail(status, error));
+    });
+  };
+};
+
+export function unsave(status) {
+  return (dispatch, getState) => {
+    dispatch(unsaveRequest(status));
+
+    api(getState).post(`/api/v1/statuses/${status.get('id')}/unsave`).then(response => {
+      dispatch(unsaveSuccess(status, response.data));
+    }).catch(error => {
+      dispatch(unsaveFail(status, error));
+    });
+  };
+};
+
+export function saveRequest(status) {
+  return {
+    type: SAVE_REQUEST,
+    status: status,
+  };
+};
+
+export function saveSuccess(status, response) {
+  return {
+    type: SAVE_SUCCESS,
+    status: status,
+    response: response,
+  };
+};
+
+export function saveFail(status, error) {
+  return {
+    type: SAVE_FAIL,
+    status: status,
+    error: error,
+  };
+};
+
+export function unsaveRequest(status) {
+  return {
+    type: UNSAVE_REQUEST,
+    status: status,
+  };
+};
+
+export function unsaveSuccess(status, response) {
+  return {
+    type: UNSAVE_SUCCESS,
+    status: status,
+    response: response,
+  };
+};
+
+export function unsaveFail(status, error) {
+  return {
+    type: UNSAVE_FAIL,
+    status: status,
+    error: error,
+  };
+};
+
+export function fetchSaves(id) {
+  return (dispatch, getState) => {
+    dispatch(fetchSavesRequest(id));
+
+    api(getState).get(`/api/v1/statuses/${id}/saved_by`).then(response => {
+      dispatch(fetchSavesSuccess(id, response.data));
+    }).catch(error => {
+      dispatch(fetchSavesFail(id, error));
+    });
+  };
+};
+
+export function fetchSavesRequest(id) {
+  return {
+    type: SAVES_FETCH_REQUEST,
+    id,
+  };
+};
+
+export function fetchSavesSuccess(id, accounts) {
+  return {
+    type: SAVES_FETCH_SUCCESS,
+    id,
+    accounts,
+  };
+};
+
+export function fetchSavesFail(id, error) {
+  return {
+    type: SAVES_FETCH_FAIL,
+    error,
+  };
+};
+

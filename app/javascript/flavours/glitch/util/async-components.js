@@ -133,3 +133,7 @@ export function EmbedModal () {
 export function GettingStartedMisc () {
   return import(/* webpackChunkName: "flavours/glitch/async/getting_started_misc" */'flavours/glitch/features/getting_started_misc');
 }
+
+export function Saved () {
+  return import(/* webpackChunkName: "flavours/glitch/async/saved" */'flavours/glitch/features/saved');
+}
