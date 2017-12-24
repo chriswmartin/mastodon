@@ -103,6 +103,10 @@ class Account < ApplicationRecord
   has_many :list_accounts, inverse_of: :account, dependent: :destroy
   has_many :lists, through: :list_accounts
 
+  # Saved statuses
+  has_many :saved_statuses, inverse_of: :account, dependent: :destroy
+  has_many :Saved_statuses, -> { reorder('saved_statuses.created_at DESC') }, through: :saved_statuses, class_name: 'Status', source: :status
+
   # Account migrations
   belongs_to :moved_to_account, class_name: 'Account'
 

@@ -251,7 +251,7 @@ Rails.application.routes.draw do
         end
       end
       resources :favourites, only: [:index]
-      resources :saves, only: [:index]
+      resources :saved, only: [:index]
       resources :reports,    only: [:index, :create]
 
       namespace :apps do

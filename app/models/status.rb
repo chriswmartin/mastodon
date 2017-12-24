@@ -199,6 +199,10 @@ class Status < ApplicationRecord
       StatusPin.select('status_id').where(status_id: status_ids).where(account_id: account_id).map { |p| [p.status_id, true] }.to_h
     end
 
+    def saves_map(status_ids, account_id)
+      SavedStatus.select('status_id').where(status_id: status_ids).where(account_id: account_id).map { |p| [p.status_id, true] }.to_h
+    end
+
     def reload_stale_associations!(cached_items)
       account_ids = []
 

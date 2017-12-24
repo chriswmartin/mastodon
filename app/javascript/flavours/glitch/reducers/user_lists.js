@@ -11,6 +11,7 @@ import {
 import {
   REBLOGS_FETCH_SUCCESS,
   FAVOURITES_FETCH_SUCCESS,
+  SAVES_FETCH_SUCCESS,
 } from 'flavours/glitch/actions/interactions';
 import {
   BLOCKS_FETCH_SUCCESS,
@@ -30,6 +31,7 @@ const initialState = ImmutableMap({
   follow_requests: ImmutableMap(),
   blocks: ImmutableMap(),
   mutes: ImmutableMap(),
+  saved_by: ImmutableMap(),
 });
 
 const normalizeList = (state, type, id, accounts, next) => {
@@ -74,6 +76,8 @@ export default function userLists(state = initialState, action) {
     return state.setIn(['mutes', 'items'], ImmutableList(action.accounts.map(item => item.id))).setIn(['mutes', 'next'], action.next);
   case MUTES_EXPAND_SUCCESS:
     return state.updateIn(['mutes', 'items'], list => list.concat(action.accounts.map(item => item.id))).setIn(['mutes', 'next'], action.next);
+  case SAVES_FETCH_SUCCESS:
+    return state.setIn(['saved_by', action.id], ImmutableList(action.accounts.map(item => item.id)));
   default:
     return state;
   }
