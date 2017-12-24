@@ -171,4 +171,8 @@ module AccountInteractions
   def pinned?(status)
     status_pins.where(status: status).exists?
   end
+
+  def saved?(status)
+    saved_statuses.where(status: status).exists?
+  end
 end

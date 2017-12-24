@@ -20,6 +20,7 @@ const messages = defineMessages({
   pins: { id: 'navigation_bar.pins', defaultMessage: 'Pinned toots' },
   info: { id: 'navigation_bar.info', defaultMessage: 'Extended information' },
   keyboard_shortcuts: { id: 'navigation_bar.keyboard_shortcuts', defaultMessage: 'Keyboard shortcuts' },
+  saved: { id: 'navigation_bar.saved', defaultMessage: 'Saved statuses' },
 });
 
 @connect()
@@ -46,10 +47,11 @@ export default class gettingStartedMisc extends ImmutablePureComponent {
         <div className='scrollable'>
           <ColumnSubheading text={intl.formatMessage(messages.subheading)} />
           <ColumnLink key='19' icon='star' text={intl.formatMessage(messages.favourites)} to='/favourites' />
-          <ColumnLink key='20' icon='thumb-tack' text={intl.formatMessage(messages.pins)} to='/pinned' />
-          <ColumnLink key='21' icon='volume-off' text={intl.formatMessage(messages.mutes)} to='/mutes' />
-          <ColumnLink key='22' icon='ban' text={intl.formatMessage(messages.blocks)} to='/blocks' />
-          <ColumnLink key='23' icon='question' text={intl.formatMessage(messages.keyboard_shortcuts)} to='/keyboard-shortcuts' />
+          <ColumnLink key='20' icon='bookmark' text={intl.formatMessage(messages.saved)} to='/saved' />
+          <ColumnLink key='21' icon='thumb-tack' text={intl.formatMessage(messages.pins)} to='/pinned' />
+          <ColumnLink key='22' icon='volume-off' text={intl.formatMessage(messages.mutes)} to='/mutes' />
+          <ColumnLink key='23' icon='ban' text={intl.formatMessage(messages.blocks)} to='/blocks' />
+          <ColumnLink key='24' icon='question' text={intl.formatMessage(messages.keyboard_shortcuts)} to='/keyboard-shortcuts' />
           <ColumnLink icon='book' text={intl.formatMessage(messages.info)} href='/about/more' />
           <ColumnLink icon='hand-o-right' text={intl.formatMessage(messages.show_me_around)} onClick={this.openOnboardingModal} />
         </div>

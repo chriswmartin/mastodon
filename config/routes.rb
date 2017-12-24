@@ -206,6 +206,7 @@ Rails.application.routes.draw do
         scope module: :statuses do
           resources :reblogged_by, controller: :reblogged_by_accounts, only: :index
           resources :favourited_by, controller: :favourited_by_accounts, only: :index
+          resources :saved_by, controller: :saved_by_accounts, only: :index
           resource :reblog, only: :create
           post :unreblog, to: 'reblogs#destroy'
 
@@ -217,6 +218,9 @@ Rails.application.routes.draw do
 
           resource :pin, only: :create
           post :unpin, to: 'pins#destroy'
+
+          resource :save, only: :create
+          post :unsave, to: 'saves#destroy'
         end
 
         member do
@@ -247,6 +251,7 @@ Rails.application.routes.draw do
         end
       end
       resources :favourites, only: [:index]
+      resources :saved, only: [:index]
       resources :reports,    only: [:index, :create]
 
       namespace :apps do

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171212195226) do
+ActiveRecord::Schema.define(version: 20171224173722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -353,6 +353,14 @@ ActiveRecord::Schema.define(version: 20171212195226) do
     t.bigint "target_account_id", null: false
     t.index ["account_id"], name: "index_reports_on_account_id"
     t.index ["target_account_id"], name: "index_reports_on_target_account_id"
+  end
+
+  create_table "saved_statuses", force: :cascade do |t|
+    t.integer "account_id", null: false
+    t.integer "status_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "status_id"], name: "index_saved_statuses_on_account_id_and_status_id", unique: true
   end
 
   create_table "session_activations", force: :cascade do |t|

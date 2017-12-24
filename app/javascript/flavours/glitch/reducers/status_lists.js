@@ -3,6 +3,10 @@ import {
   FAVOURITED_STATUSES_EXPAND_SUCCESS,
 } from 'flavours/glitch/actions/favourites';
 import {
+  SAVED_STATUSES_FETCH_SUCCESS,
+  SAVED_STATUSES_EXPAND_SUCCESS,
+} from 'flavours/glitch/actions/saves';
+import {
   PINNED_STATUSES_FETCH_SUCCESS,
 } from 'flavours/glitch/actions/pin_statuses';
 import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
@@ -11,6 +15,8 @@ import {
   UNFAVOURITE_SUCCESS,
   PIN_SUCCESS,
   UNPIN_SUCCESS,
+  SAVE_SUCCESS,
+  UNSAVE_SUCCESS,
 } from 'flavours/glitch/actions/interactions';
 
 const initialState = ImmutableMap({
@@ -20,6 +26,11 @@ const initialState = ImmutableMap({
     items: ImmutableList(),
   }),
   pins: ImmutableMap({
+    next: null,
+    loaded: false,
+    items: ImmutableList(),
+  }),
+  saves: ImmutableMap({
     next: null,
     loaded: false,
     items: ImmutableList(),
@@ -69,6 +80,14 @@ export default function statusLists(state = initialState, action) {
     return prependOneToList(state, 'pins', action.status);
   case UNPIN_SUCCESS:
     return removeOneFromList(state, 'pins', action.status);
+  case SAVED_STATUSES_FETCH_SUCCESS:
+    return normalizeList(state, 'saves', action.statuses, action.next);
+  case SAVED_STATUSES_EXPAND_SUCCESS:
+    return appendToList(state, 'saves', action.statuses, action.next);
+  case SAVE_SUCCESS:
+    return prependOneToList(state, 'saves', action.status);
+  case UNSAVE_SUCCESS:
+    return removeOneFromList(state, 'saves', action.status);
   default:
     return state;
   }

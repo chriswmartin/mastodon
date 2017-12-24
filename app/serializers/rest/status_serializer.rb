@@ -9,6 +9,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
   attribute :reblogged, if: :current_user?
   attribute :muted, if: :current_user?
   attribute :pinned, if: :pinnable?
+  attribute :saved, if: :current_user?
 
   belongs_to :reblog, serializer: REST::StatusSerializer
   belongs_to :application
@@ -84,6 +85,14 @@ class REST::StatusSerializer < ActiveModel::Serializer
       current_user.account_id == object.account_id &&
       !object.reblog? &&
       %w(public unlisted).include?(object.visibility)
+  end
+
+  def saved
+    if instance_options && instance_options[:relationships]
+      instance_options[:relationships].saves_map[object.id] || false
+    else
+      current_user.account.saved?(object)
+    end
   end
 
   class ApplicationSerializer < ActiveModel::Serializer

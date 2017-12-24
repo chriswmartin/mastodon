@@ -13,6 +13,8 @@ import {
   unfavourite,
   pin,
   unpin,
+  save,
+  unsave,
 } from 'flavours/glitch/actions/interactions';
 import { blockAccount } from 'flavours/glitch/actions/accounts';
 import { muteStatus, unmuteStatus, deleteStatus } from 'flavours/glitch/actions/statuses';
@@ -104,6 +106,14 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
 
   onEmbed (status) {
     dispatch(openModal('EMBED', { url: status.get('url') }));
+  },
+
+  onSave (status) {
+    if (status.get('saved')) {
+      dispatch(unsave(status));
+    } else {
+      dispatch(save(status));
+    }
   },
 
   onDelete (status) {
